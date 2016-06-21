@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Video & audio</title>
+  <style type="text/css" media="screen">
+    body {
+      background-color: #ccc;
+      font-family: sans-serif;
+    }
+
+    .audio-cont { margin-bottom: 10px; }
+
+    #play_a,
+    #pause_a,
+    #play_v,
+    #pause_v {
+      background-color: orange;
+      padding: 10px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+  </style>
+</head>
+<body>
+  <section>
+    <div class="audio-cont">
+      <audio preload="auto">
+        <source src="http://jPlayer.org/audio/mp3/Miaow-01-Tempered-song.mp3" type="audio/mpeg">
+        <source src="http://jPlayer.org/audio/mp3/Miaow-01-Tempered-song.ogg" type="audio/ogg">
+         <a href="http://jPlayer.org/audio/mp3/Miaow-01-Tempered-song.mp3">Download this audio file.</a>
+      </audio>
+      <div>
+        <a href="#" id="play_a">Play</a>
+        <a href="#" id="pause_a">Pause</a>
+      </div>
+
+    </div>
+    <div class="video-cont">
+      <video autobuffer poster="https://aos.iacpublishinglabs.com/question/aq/700px-394px/sunflowers-used_6789ef447adf6da4.jpg?domain=cx.aos.ask.com">
+        <source src="http://jPlayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v" type="video/mp4">
+        <source src="http://jPlayer.org/video/ogv/Big_Buck_Bunny_Trailer.ogg" type="video/ogg">
+
+        <a href="http://jPlayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v">Download this video file.</a>
+
+      </video>
+      <div>
+        <a href="#" id="play_v">Play</a>
+        <a href="#" id="pause_v">Pause</a>
+      </div>
+    </div>
+
+  </section>
+  <script type="text/javascript" defer>
+  window.onload = function(){
+    var myAudio = document.getElementsByTagName('audio')[0],
+        myVideo = document.getElementsByTagName('video')[0],
+        playA = document.getElementById('play_a'),
+        pauseA = document.getElementById('pause_a'),
+        playV = document.getElementById('play_v'),
+        pauseV = document.getElementById('pause_v');
+
+        playA.addEventListener('click', playAudio, false);
+        pauseA.addEventListener('click', pauseAudio, false);
+        playV.addEventListener('click', playVideo, false);
+        pauseV.addEventListener('click', pauseVideo, false);
+
+        function playAudio(e){
+          e.preventDefault();
+          myAudio.play();
+        }
+
+        function pauseAudio(e){
+          e.preventDefault();
+          myAudio.pause();
+        }
+
+        function playVideo(e){
+          e.preventDefault();
+          myVideo.play();
+        }
+
+        function pauseVideo(e){
+          e.preventDefault();
+          myVideo.pause();
+        }
+
+        var bufferedATimeRanges = myAudio.buffered;
+
+        console.log(bufferedATimeRanges);
+        console.log('start: '+bufferedATimeRanges.start(0) + ' end: '+bufferedATimeRanges.end(0));
+
+        console.log('seeking: '+myAudio.seeking);
+        console.log('seekable: '+myAudio.seekable);
+        console.log('seekable end: '+myAudio.seekable.end(0));
+
+  }
+
+ </script>
+</body>
+</html>
