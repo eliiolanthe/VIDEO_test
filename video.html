@@ -10,10 +10,18 @@
 
     .audio-cont { margin-bottom: 10px; }
 
-    #play_a,
-    #pause_a,
-    #play_v,
-    #pause_v {
+    video {
+      width: 500px;
+      height: 290px;
+    }
+
+    .video-cont {
+      margin-bottom: 10px;
+      border: solid thin #666;
+    }
+
+    .play_v,
+    .pause_v {
       background-color: orange;
       padding: 10px;
       text-decoration: none;
@@ -24,6 +32,7 @@
 </head>
 <body>
   <section>
+  <!--
     <div class="audio-cont">
       <audio preload="auto">
         <source src="http://jPlayer.org/audio/mp3/Miaow-01-Tempered-song.mp3" type="audio/mpeg">
@@ -36,22 +45,58 @@
       </div>
 
     </div>
+    -->
     <div class="video-cont">
-      <video autobuffer poster="https://aos.iacpublishinglabs.com/question/aq/700px-394px/sunflowers-used_6789ef447adf6da4.jpg?domain=cx.aos.ask.com">
-        <source src="http://jPlayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v" type="video/mp4">
-        <source src="http://jPlayer.org/video/ogv/Big_Buck_Bunny_Trailer.ogg" type="video/ogg">
+      <video id="vid0" autobuffer controls poster="https://aos.iacpublishinglabs.com/question/aq/700px-394px/sunflowers-used_6789ef447adf6da4.jpg?domain=cx.aos.ask.com">
+        <source src="video/golden_gate_bridge.mp4" type="video/mp4">
+        <!--<source src="http://jPlayer.org/video/ogv/Big_Buck_Bunny_Trailer.ogg" type="video/ogg">-->
 
-        <a href="http://jPlayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v">Download this video file.</a>
-
+        <!--<a href="http://jPlayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v">Download this video file.</a>-->
       </video>
       <div>
-        <a href="#" id="play_v">Play</a>
-        <a href="#" id="pause_v">Pause</a>
+        <a href="#" class="play_v">Play</a>
+        <a href="#" class="pause_v">Pause</a>
       </div>
     </div>
 
+     <div class="video-cont">
+      <video id="vid1" autobuffer controls poster="https://aos.iacpublishinglabs.com/question/aq/700px-394px/sunflowers-used_6789ef447adf6da4.jpg?domain=cx.aos.ask.com">
+        <source src="video/red_flowers.mp4" type="video/mp4">
+
+      </video>
+      <div>
+        <a href="#" class="play_v">Play</a>
+        <a href="#" class="pause_v">Pause</a>
+      </div>
+    </div>
+
+
   </section>
   <script type="text/javascript" defer>
+
+  function VideoPlayer(id){
+    this.video = document.getElementById(id);
+  }
+
+  //VideoPlayer.prototype.play = function(){
+   //return this.video.play();
+ // }
+
+  (function(){
+    var videos = document.getElementsByTagName('video');
+    var myvids = [];
+
+    for (var i=0; i < videos.length; i++) {
+      myvids[i] = new VideoPlayer(videos[i].getAttribute('id'));
+
+    }
+
+    //myvids[0].video.play();
+
+  }())
+
+
+  /*
   window.onload = function(){
     var myAudio = document.getElementsByTagName('audio')[0],
         myVideo = document.getElementsByTagName('video')[0],
@@ -95,6 +140,7 @@
         console.log('seekable end: '+myAudio.seekable.end(0));
 
   }
+  */
 
  </script>
 </body>
