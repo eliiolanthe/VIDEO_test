@@ -53,20 +53,24 @@
 
         <!--<a href="http://jPlayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v">Download this video file.</a>-->
       </video>
-      <div>
+      <div class="controls">
         <a href="#" class="play_v">Play</a>
         <a href="#" class="pause_v">Pause</a>
+        <a href="#" class="fullscreen">Full screen</a>
+        <input type="range" class="volume" name="volume" min="0" max="10" step="1">
       </div>
     </div>
 
      <div class="video-cont">
-      <video id="vid1" autobuffer controls poster="https://aos.iacpublishinglabs.com/question/aq/700px-394px/sunflowers-used_6789ef447adf6da4.jpg?domain=cx.aos.ask.com">
+      <video id="vid1" autobuffer poster="https://aos.iacpublishinglabs.com/question/aq/700px-394px/sunflowers-used_6789ef447adf6da4.jpg?domain=cx.aos.ask.com">
         <source src="video/red_flowers.mp4" type="video/mp4">
 
       </video>
-      <div>
+      <div class="controls">
         <a href="#" class="play_v">Play</a>
         <a href="#" class="pause_v">Pause</a>
+        <a href="#" class="fullscreen">Full screen</a>
+        <input type="range" class="volume" name="volume" min="0" max="10" step="1">
       </div>
     </div>
 
@@ -75,8 +79,54 @@
   <script type="text/javascript" defer>
 
   function VideoPlayer(id){
-    this.video = document.getElementById(id);
+    //this.video;
+    this.controls = {};
+    this.setElements(id);
+    this.bindEvents();
+    this.logStuff();
   }
+
+  VideoPlayer.prototype = {
+    setElements: function(id){
+      this.video = document.getElementById(id);   
+      this.controls.playBtn = this.video.parentNode.getElementsByClassName('play_v')[0];  
+      this.controls.pauseBtn = this.video.parentNode.getElementsByClassName('pause_v')[0];  
+      this.controls.fullscreenOn = this.video.parentNode.getElementsByClassName('fullscreen')[0];
+      this.controls.volumeCtrl = this.video.parentNode.getElementsByClassName('volume')[0];
+
+      this.video.volume = 0.5;
+    },
+    bindEvents: function(){
+      this.controls.playBtn.addEventListener('click', this.playVid.bind(this), false);
+      this.controls.pauseBtn.addEventListener('click', this.pauseVid.bind(this), false);
+      this.controls.fullscreenOn.addEventListener('click', this.toggleFullScreen.bind(this), false);
+      this.controls.volumeCtrl.addEventListener('change', this.manageVolume.bind(this), false);
+    },
+    playVid: function(e){
+      e.preventDefault();
+      this.video.play();
+    },
+    pauseVid: function(e){
+      e.preventDefault();
+      this.video.pause();
+    },
+    toggleFullScreen: function(e){
+      e.preventDefault();
+      console.log('lalalal');
+    },
+    manageVolume: function(e){
+      var currentVol = e.currentTarget.value;
+      this.setVolume(currentVol);      
+    },
+    setVolume: function(vol){
+      this.video.volume = vol/10;
+    },
+    logStuff: function(){
+      //console.log(this.controls.volumeCtrl.value);
+
+    }
+
+  };
 
   //VideoPlayer.prototype.play = function(){
    //return this.video.play();
@@ -87,11 +137,15 @@
     var myvids = [];
 
     for (var i=0; i < videos.length; i++) {
-      myvids[i] = new VideoPlayer(videos[i].getAttribute('id'));
-
+      myvids[i] = new VideoPlayer(videos[i].getAttribute('id'));     
     }
 
-    //myvids[0].video.play();
+
+    //myvids[0].playVid();
+    // setTimeout(function(){
+    //   myvids[0].manageVolume(2);
+    //   //myvids[0].pauseVid();
+    // }, 1000);
 
   }())
 
