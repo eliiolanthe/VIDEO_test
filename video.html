@@ -88,9 +88,9 @@
 
   VideoPlayer.prototype = {
     setElements: function(id){
-      this.video = document.getElementById(id);   
-      this.controls.playBtn = this.video.parentNode.getElementsByClassName('play_v')[0];  
-      this.controls.pauseBtn = this.video.parentNode.getElementsByClassName('pause_v')[0];  
+      this.video = document.getElementById(id);
+      this.controls.playBtn = this.video.parentNode.getElementsByClassName('play_v')[0];
+      this.controls.pauseBtn = this.video.parentNode.getElementsByClassName('pause_v')[0];
       this.controls.fullscreenOn = this.video.parentNode.getElementsByClassName('fullscreen')[0];
       this.controls.volumeCtrl = this.video.parentNode.getElementsByClassName('volume')[0];
 
@@ -115,8 +115,8 @@
       console.log('lalalal');
     },
     manageVolume: function(e){
-      var currentVol = e.currentTarget.value;
-      this.setVolume(currentVol);      
+      var currentVol = e.target.value;
+      this.setVolume(currentVol);
     },
     setVolume: function(vol){
       this.video.volume = vol/10;
@@ -137,7 +137,7 @@
     var myvids = [];
 
     for (var i=0; i < videos.length; i++) {
-      myvids[i] = new VideoPlayer(videos[i].getAttribute('id'));     
+      myvids[i] = new VideoPlayer(videos[i].getAttribute('id'));
     }
 
 
