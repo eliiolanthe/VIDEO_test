@@ -18,15 +18,30 @@
     .video-cont {
       margin-bottom: 10px;
       border: solid thin #666;
+      position: relative;
     }
 
-    .play_v,
+    .play_pause,
     .pause_v {
       background-color: orange;
       padding: 10px;
       text-decoration: none;
       display: inline-block;
     }
+    .playing {
+      background-color: #6BB661;
+    }
+
+    .fullscreen {
+      background-color: #68B8CC;
+      padding: 10px;
+      text-decoration: none;
+      display: inline-block;
+      position: absolute;
+      bottom: 50px;
+      left: 0;
+     }
+
 
   </style>
 </head>
@@ -47,15 +62,15 @@
     </div>
     -->
     <div class="video-cont">
-      <video id="vid0" autobuffer controls poster="https://aos.iacpublishinglabs.com/question/aq/700px-394px/sunflowers-used_6789ef447adf6da4.jpg?domain=cx.aos.ask.com">
+      <video id="vid0" autobuffer poster="https://aos.iacpublishinglabs.com/question/aq/700px-394px/sunflowers-used_6789ef447adf6da4.jpg?domain=cx.aos.ask.com">
         <source src="video/golden_gate_bridge.mp4" type="video/mp4">
         <!--<source src="http://jPlayer.org/video/ogv/Big_Buck_Bunny_Trailer.ogg" type="video/ogg">-->
 
         <!--<a href="http://jPlayer.org/video/m4v/Big_Buck_Bunny_Trailer.m4v">Download this video file.</a>-->
       </video>
       <div class="controls">
-        <a href="#" class="play_v">Play</a>
-        <a href="#" class="pause_v">Pause</a>
+        <a href="#" class="play_pause">Play / Pause</a>
+        <!--<a href="#" class="pause_v">Pause</a>-->
         <a href="#" class="fullscreen">Full screen</a>
         <input type="range" class="volume" name="volume" min="0" max="10" step="1">
       </div>
@@ -67,8 +82,8 @@
 
       </video>
       <div class="controls">
-        <a href="#" class="play_v">Play</a>
-        <a href="#" class="pause_v">Pause</a>
+        <a href="#" class="play_pause">Play / Pause</a>
+        <!--<a href="#" class="pause_v">Pause</a>-->
         <a href="#" class="fullscreen">Full screen</a>
         <input type="range" class="volume" name="volume" min="0" max="10" step="1">
       </div>
@@ -84,49 +99,87 @@
     this.setElements(id);
     this.bindEvents();
     this.logStuff();
-  }
+  };
 
-  VideoPlayer.prototype = {
-    setElements: function(id){
-      this.video = document.getElementById(id);   
-      this.controls.playBtn = this.video.parentNode.getElementsByClassName('play_v')[0];  
-      this.controls.pauseBtn = this.video.parentNode.getElementsByClassName('pause_v')[0];  
+  VideoPlayer.prototype.setElements = function(id){
+      this.video = document.getElementById(id);
+      this.controls.togglePlay = this.video.parentNode.getElementsByClassName('play_pause')[0];
       this.controls.fullscreenOn = this.video.parentNode.getElementsByClassName('fullscreen')[0];
       this.controls.volumeCtrl = this.video.parentNode.getElementsByClassName('volume')[0];
-
       this.video.volume = 0.5;
-    },
-    bindEvents: function(){
-      this.controls.playBtn.addEventListener('click', this.playVid.bind(this), false);
-      this.controls.pauseBtn.addEventListener('click', this.pauseVid.bind(this), false);
+    };
+
+  VideoPlayer.prototype.bindEvents = function(){
+      this.controls.togglePlay.addEventListener('click', this.togglePlayPause.bind(this), false);
       this.controls.fullscreenOn.addEventListener('click', this.toggleFullScreen.bind(this), false);
       this.controls.volumeCtrl.addEventListener('change', this.manageVolume.bind(this), false);
-    },
-    playVid: function(e){
-      e.preventDefault();
-      this.video.play();
-    },
-    pauseVid: function(e){
-      e.preventDefault();
-      this.video.pause();
-    },
-    toggleFullScreen: function(e){
-      e.preventDefault();
-      console.log('lalalal');
-    },
-    manageVolume: function(e){
-      var currentVol = e.currentTarget.value;
-      this.setVolume(currentVol);      
-    },
-    setVolume: function(vol){
-      this.video.volume = vol/10;
-    },
-    logStuff: function(){
-      //console.log(this.controls.volumeCtrl.value);
+    };
 
+  VideoPlayer.prototype.togglePlayPause = function(e){
+      e.preventDefault();
+      this.video.paused ? this.playVid() : this.pauseVid();
+  };
+
+  VideoPlayer.prototype.playVid = function(){
+      this.video.play();
+      this.controls.togglePlay.classList.add('playing');
+  };
+
+  VideoPlayer.prototype.pauseVid = function(){
+    this.video.pause();
+    this.controls.togglePlay.classList.remove('playing');
+  };
+
+  VideoPlayer.prototype.toggleFullScreen = function(e){
+    e.preventDefault();
+
+    if (
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement
+    ) {
+      console.log('fullscreen on!');
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) {
+         document.msExitFullscreen();
+      }
+
+    } else {
+      console.log('notfullscreen');
+
+      if (this.video.requestFullscreen) {
+        this.video.requestFullscreen();
+      } else if (this.video.webkitRequestFullscreen) {
+        this.video.webkitRequestFullscreen();
+      } else if (this.video.mozRequestFullScreen) {
+        this.video.mozRequestFullScreen();
+      } else if (this.video.msRequestFullscreen) {
+        this.video.msRequestFullscreen();
+      }
     }
 
   };
+
+  VideoPlayer.prototype.manageVolume =  function(e){
+    var currentVol = e.currentTarget.value;
+    this.setVolume(currentVol);
+  };
+
+  VideoPlayer.prototype.setVolume = function(vol){
+    this.video.volume = vol/10;
+  };
+
+  VideoPlayer.prototype.logStuff = function(){
+     console.log(this.controls.volumeCtrl.value);
+     //console.log('ssss');
+  };
+
 
   //VideoPlayer.prototype.play = function(){
    //return this.video.play();
@@ -137,7 +190,7 @@
     var myvids = [];
 
     for (var i=0; i < videos.length; i++) {
-      myvids[i] = new VideoPlayer(videos[i].getAttribute('id'));     
+      myvids[i] = new VideoPlayer(videos[i].getAttribute('id'));
     }
 
 
